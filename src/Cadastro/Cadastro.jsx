@@ -7,14 +7,16 @@ import Person from "@mui/icons-material/Person";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
+import api from "../axios/axios";
 
 function Cadastro() {
 
     const[user, setUser] = useState({
+        cpf:"",
         email:"",
         password:"",
-        age:"",
-        name:"",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+        name:"",
+        data_nascimento:"",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
     })
 
     const onChange = (event) => {
@@ -25,7 +27,18 @@ function Cadastro() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        alert("Email:"+user.email+" "+"Senha:"+user.password+" "+"Age:"+user.age+" "+"Nome:"+user.name)
+       cadastro();
+    }
+    async function cadastro() {
+      await api.postCadastro(user).then(
+        (response) => {
+          alert(response.data.message);
+        },
+        (error) => {
+          console.log(error);
+          alert(error.response.data.error);
+        }
+      )
     }
 
   return (
@@ -43,6 +56,16 @@ function Cadastro() {
           Cadastro
         </Typography>
         <Box component="form" sx={{mt:1}} onSubmit={handleSubmit} noValidate>
+        <TextField 
+          required
+          fullWidth
+          id="cpf"
+          label="CPF"
+          name="cpf"
+          margin="normal"
+          value={user.cpf}
+          onChange={onChange}
+          />
           <TextField 
           required
           fullWidth
@@ -65,17 +88,6 @@ function Cadastro() {
             onChange={onChange}
             />
 
-             <TextField 
-          required
-          fullWidth
-          id="age"
-          label="Idade"
-          name="age"
-          margin="normal"
-          value={user.age}
-          onChange={onChange}
-          />
-
         <TextField 
           required
           fullWidth
@@ -85,7 +97,18 @@ function Cadastro() {
           margin="normal"
           value={user.name}
           onChange={onChange}
+          />         
+<TextField 
+          required
+          fullWidth
+          id="data_nascimento"
+          name="data_nascimento"
+          margin="normal"
+          type="date"
+          value={user.data_nascimento}
+          onChange={onChange}
           />
+
           
           <Button sx={{ mt:3, mb:2, backgroundColor:"rgb(128,0,128)"}}
           fullWidth
